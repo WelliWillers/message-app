@@ -10,6 +10,7 @@ interface InputProps {
   required?: boolean
   register: UseFormRegister<FieldValues>
   errors: FieldErrors
+  errorDescription?: string
   disabled?: boolean
 }
 
@@ -20,7 +21,8 @@ export default function Input({
   disabled,
   register,
   required,
-  type
+  type,
+  errorDescription
 }:InputProps){
   return (
     <div>
@@ -58,6 +60,11 @@ export default function Input({
           disabled && "opacity-50 cursor-default")}
         />
       </div>
+      {
+        errorDescription && (
+          <p className="text-sm text-red-500 mt-1">{errorDescription}</p>
+        )
+      }
     </div>
   );
 }

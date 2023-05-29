@@ -2,11 +2,16 @@
 
 import Button from "@/app/components/inputs/Button";
 import Input from "@/app/components/inputs/Input";
-import { useLoad } from "@/hooks/useLoader";
 import { useCallback, useState } from "react";
 import { FieldValues, useForm, SubmitHandler } from "react-hook-form";
 import AuthSocialButton from "./AuthSocialButton";
 import { CircleNotch, GoogleLogo } from "phosphor-react";
+import { GithubLogo } from "@phosphor-icons/react";
+import { api } from "@/app/libs/axios";
+import { useLoad } from "@/app/hooks/useLoader";
+import { toast } from "react-hot-toast";
+import { signIn } from 'next-auth/react'
+
 
 type VariantTypes = 'LOGIN' | 'REGISTER'
 
@@ -32,21 +37,52 @@ export default function AuthForm(){
     }
   })
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setLoading(true)
 
     if(variant === 'REGISTER'){
-      
+      await api.post('/register', data)
+      .then((res) => {
+        toast.success('Usuário criado com sucesso')
+      }).catch((err) => {
+        toast.error('Algo deu errado')
+      }).finally(() => {
+        setLoading(false)
+      })
     }
     
     if(variant === 'LOGIN'){
-      
+      signIn('credentials', {
+        ...data,
+        redirect: false
+      }).then((callback) => {
+        if(callback?.error){
+          toast.error('Credenciais inválidas')
+        }
+
+        if(callback?.ok && !callback?.error){
+          toast.success('Logou com sucesso')
+        }
+      }).finally(() => {
+        setLoading(false)
+      })
     }
   }
 
-  const socialAction = (action: string) => {
+  const socialAction = (action: 'github' | 'google') => {
     setLoading(true)
 
+    signIn(action, { redirect: false}).then((callback) => {
+      if(callback?.error){
+        toast.error('Credenciais inválidas')
+      }
+
+      if(callback?.ok && !callback?.error){
+        toast.success('Logou com sucesso')
+      }
+    }).finally(() => {
+      setLoading(false)
+    })
   }
  
   return (
@@ -96,10 +132,16 @@ export default function AuthForm(){
           </div>
 
           <div className="mt-6 flex gap-2">
-            <AuthSocialButton icon={GoogleLogo} onClick={() => {}} />
-            {/* <AuthSocialButton /> */}
+            <AuthSocialButton icon={GithubLogo} onClick={() => socialAction('github')} />
+            <AuthSocialButton icon={GoogleLogo} onClick={() => socialAction('google')} />
           </div>
 
+        </div>
+
+        <div className="mt-6 text-center text-gray-500 text-sm px-2 underline cursor-pointer" onClick={toogleVariant}>
+          {
+            variant === 'LOGIN' ? 'Ainda não tem conta?' : 'Já tem uma conta? Faça login'
+          }
         </div>
       </div>
     </div>
