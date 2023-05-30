@@ -2,7 +2,7 @@
 
 import Button from "@/app/components/inputs/Button";
 import Input from "@/app/components/inputs/Input";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FieldValues, useForm, SubmitHandler } from "react-hook-form";
 import AuthSocialButton from "./AuthSocialButton";
 import { CircleNotch, GoogleLogo } from "phosphor-react";
@@ -10,12 +10,16 @@ import { GithubLogo } from "@phosphor-icons/react";
 import { api } from "@/app/libs/axios";
 import { useLoad } from "@/app/hooks/useLoader";
 import { toast } from "react-hot-toast";
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
+import { useRouter } from "next/navigation";
 
 
 type VariantTypes = 'LOGIN' | 'REGISTER'
 
 export default function AuthForm(){
+
+  const session = useSession()
+  const router = useRouter()
 
   const [ variant, setVariant] = useState<VariantTypes>('LOGIN')
 
@@ -28,6 +32,12 @@ export default function AuthForm(){
       setVariant('LOGIN')
     }
   }, [variant])
+
+  useEffect(() => {
+    if(session?.status === 'authenticated'){
+      router.push('/users')
+    }
+  }, [session?.status, router])
   
   const {register, handleSubmit, formState: {errors}} = useForm<FieldValues>({
     defaultValues: {
@@ -43,6 +53,7 @@ export default function AuthForm(){
     if(variant === 'REGISTER'){
       await api.post('/register', data)
       .then((res) => {
+        signIn('credentials', data)
         toast.success('Usuário criado com sucesso')
       }).catch((err) => {
         toast.error('Algo deu errado')
@@ -61,6 +72,7 @@ export default function AuthForm(){
         }
 
         if(callback?.ok && !callback?.error){
+          router.push('/users')
           toast.success('Logou com sucesso')
         }
       }).finally(() => {
