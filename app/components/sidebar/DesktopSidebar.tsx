@@ -4,8 +4,13 @@ import useRoutes from "@/app/hooks/useRoutes";
 import { Icon } from "@phosphor-icons/react";
 import { useState } from "react";
 import DesktopItem from "./DesktopItem";
+import { User } from "@prisma/client";
+import Avatar from "../Avatar";
 
-export default function DesktopSidebar(){
+interface DesktopSidebarProps {
+  currentUser: User
+}
+export default function DesktopSidebar({currentUser}: DesktopSidebarProps){
   const routes = useRoutes();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -28,6 +33,11 @@ export default function DesktopSidebar(){
             })
           }
         </ul>
+      </nav>
+      <nav className="mt-4 flex flex-col justify-between items-center">
+          <div onClick={() => setIsOpen(true)} className="cursor-pointer hover:opacity-75 transition-all">
+            <Avatar user={currentUser} />
+          </div>
       </nav>
     </div>
   );
