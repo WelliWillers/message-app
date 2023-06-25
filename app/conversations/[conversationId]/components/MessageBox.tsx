@@ -6,6 +6,8 @@ import clsx from "clsx";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useState } from "react";
+import ImageModal from "./ImageModal";
 
 interface MessageBoxProps {
   data: FullMessageType;
@@ -15,6 +17,7 @@ interface MessageBoxProps {
 export default function MessageBox({ data, isLast }: MessageBoxProps) {
 
   const session = useSession()
+  const [imageModalOpen, setImageModalOpen] = useState(false)
 
   const isOwn = session?.data?.user?.email === data?.sender.email
   const seenList = (data.seen || [])
@@ -57,9 +60,14 @@ export default function MessageBox({ data, isLast }: MessageBoxProps) {
           </div>
         </div>
         <div className={message}>
+          <ImageModal
+            isOpen={imageModalOpen}
+            src={data.image!}
+            onClose={() => setImageModalOpen(false)}
+          />
           {
             data.image ? (
-              <Image alt="Image" height="288" width="288" src={data.image} className="object-cover cursor-pointer hover:scale-110 transition" />
+              <Image onClick={() => setImageModalOpen(true)} alt="Image" height="288" width="288" src={data.image} className="object-cover cursor-pointer hover:scale-110 transition" />
             ) : (
               <div>
                 {data.body}
@@ -68,7 +76,7 @@ export default function MessageBox({ data, isLast }: MessageBoxProps) {
           }
         </div>
         {
-          isLast && isOwn && seenList.length > 0 && (
+          isLast && !isOwn && seenList.length > 0 && (
             <div className="text-xs font-light text-gray-500">
               {`Enviado por ${seenList}`}
             </div>

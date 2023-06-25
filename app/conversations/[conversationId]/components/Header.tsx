@@ -7,6 +7,7 @@ import { Conversation, User } from "@prisma/client";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import ProfileDrawer from "./ProfileDrawer";
+import AvatarGroup from "@/app/components/AvatarGroup";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -40,7 +41,13 @@ export default function Header({ conversation }: HeaderProps) {
           <Link href="/conversations" className="lg:hidden block text-sky-500 hover:text-sky-600 transition cursor-pointer">
             <CaretLeft size={32} />
           </Link>
-          <Avatar user={otherUser} />
+          {
+            conversation.isGroup ? (
+              <AvatarGroup users={conversation.users} />
+            ) : (
+              <Avatar user={otherUser} />
+            )
+          }
           <div className="flex flex-col">
             <div>
               {

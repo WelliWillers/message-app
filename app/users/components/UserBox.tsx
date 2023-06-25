@@ -1,6 +1,7 @@
 'use client'
 
 import Avatar from "@/app/components/Avatar";
+import LoadingModal from "@/app/components/LoadingModal";
 import { useLoad } from "@/app/hooks/useLoader";
 import { api } from "@/app/libs/axios";
 import { User } from "@prisma/client";
@@ -29,16 +30,19 @@ export default function UserBox({data}: UserBoxProps) {
     }, [data, router])
 
     return (
-        <div className="w-full relative flex items-center space-x-3 bg-white hover:bg-neutral-100 p-3 rounded-lg transition cursor-pointer" onClick={handleClick}>
-            <Avatar user={data} />
-            <div className="min-w-0 flex-1">
-                <div className="focus:outline-none">
-                    <div className="flex justify-between items-center mb-1">
-                        <p className="text-sm font-medium text-gray-900">{data.name}</p>
+        <>
+            {show && <LoadingModal />}
+            <div className="w-full relative flex items-center space-x-3 bg-white hover:bg-neutral-100 p-3 rounded-lg transition cursor-pointer" onClick={handleClick}>
+                <Avatar user={data} />
+                <div className="min-w-0 flex-1">
+                    <div className="focus:outline-none">
+                        <div className="flex justify-between items-center mb-1">
+                            <p className="text-sm font-medium text-gray-900">{data.name}</p>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
-        </div>
+        </>
     );
 }
