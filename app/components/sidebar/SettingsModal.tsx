@@ -11,6 +11,7 @@ import Input from "../inputs/Input";
 import Image from "next/image";
 import { CldUploadButton } from "next-cloudinary";
 import Button from "../inputs/Button";
+import Avatar from "../Avatar";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -80,7 +81,7 @@ export default function SettingsModal({
               <div>
                 <label className="block text-sm font-medium leading-6 text-gray-900">Foto</label>
                 <div className="mt-2 flex items-center gap-x-3">
-                  <Image width={48} height={48} alt="Avatar" src={image || currentUser.image || '/images/logo.png' } className="rounded-full"/>
+                  <Avatar user={currentUser} />
                   <CldUploadButton options={{maxFiles: 1}} onUpload={handleUpload} uploadPreset="td5ffzk2">
                     <Button disabled={show} secondary type="button">
                       Editar

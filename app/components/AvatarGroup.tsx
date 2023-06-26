@@ -21,7 +21,7 @@ export default function AvatarGroup({ users }: AvatarGroupProps) {
   return (
     <div className="relative h-11 w-11">
       {slicedUsers?.map((user, i) => (
-        <div className={`
+        <div key={i} className={`
           absolute
           inline-block
           rounded-full

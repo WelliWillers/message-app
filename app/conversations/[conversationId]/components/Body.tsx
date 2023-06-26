@@ -73,7 +73,7 @@ export default function Body({initialMessages}: BodyProps) {
           />
         ))
       }
-      <div className="pt-24" ref={buttonRef} />
+      <div className="pt-14" ref={buttonRef} />
     </div>
   );
 }

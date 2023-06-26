@@ -76,9 +76,9 @@ export default function MessageBox({ data, isLast }: MessageBoxProps) {
           }
         </div>
         {
-          isLast && !isOwn && seenList.length > 0 && (
+          isLast && isOwn && seenList.length > 0 && (
             <div className="text-xs font-light text-gray-500">
-              {`Enviado por ${seenList}`}
+              {`Lido por ${seenList}`}
             </div>
           )
         }

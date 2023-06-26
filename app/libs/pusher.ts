@@ -10,5 +10,9 @@ export const pusherServer = new PusherServer({
 })
 
 export const pusherClient = new PusherClient(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
-  cluster: 'us2'
+  cluster: 'us2',
+  channelAuthorization: {
+    endpoint: '/api/pusher/auth',
+    transport: 'ajax'
+  }
 })

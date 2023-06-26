@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { Fragment, useMemo, useState } from "react";
 import ConfirmModal from "./ConfirmModal";
 import AvatarGroup from "@/app/components/AvatarGroup";
+import useActiveList from "@/app/hooks/useActiveList";
 
 interface ProfileDrawerProps {
   data: Conversation & {
@@ -34,13 +35,17 @@ export default function ProfileDrawer({
     return data.name || otherUser.name;
   }, [data.name, otherUser.name]);
 
+  const {members} = useActiveList()
+
+  const isActive = members.indexOf(otherUser?.email!) != -1
+
   const statusText = useMemo(() => {
     if (data.isGroup) {
       return `${data.userIds.length} membros`;
     }
 
-    return "Ativo";
-  }, [data]);
+    return isActive ? "Ativo" : "Inativo"
+  }, [data, isActive]);
 
   return (
     <>

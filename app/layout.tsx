@@ -2,6 +2,7 @@ import { LoaderContextProvider } from '@/app/contexts/LoaderContext'
 import './globals.css'
 import ToasterContext from './contexts/ToasterContext'
 import AuthContext from './contexts/AuthContext'
+import ActiveStatus from './components/ActiveStatus'
 
 export const metadata = {
   title: 'Messanger clone',
@@ -19,6 +20,7 @@ export default function RootLayout({
         <body>
           <AuthContext>
             <ToasterContext />
+            <ActiveStatus />
             {children}
           </AuthContext>
         </body>
